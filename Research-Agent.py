@@ -6,12 +6,11 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 
-# 👇 classic agents, not new v1 API
 from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
 
 from tools import search_tool, wiki_tool, save_tool
 
-load_dotenv()  # needs GOOGLE_API_KEY in your .env
+load_dotenv() 
 
 
 class ResearchResponse(BaseModel):
@@ -21,7 +20,6 @@ class ResearchResponse(BaseModel):
     tools_used: List[str]
 
 
-# ✅ Gemini model (you said you're using Gemini)
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
 parser = PydanticOutputParser(pydantic_object=ResearchResponse)
@@ -58,7 +56,7 @@ agent_executor = AgentExecutor(
 
 user_query = input("What can I help you research? ")
 
-# classic AgentExecutor convention: use "input" key
+
 raw_response = agent_executor.invoke({"input": user_query})
 
 try:
@@ -76,16 +74,14 @@ try:
     else:
         text = str(raw_output)
 
-    # 2. Strip ```json ... ``` fences if present
     stripped = text.strip()
     if stripped.startswith("```"):
-        # Drop first line (``` or ```json)
+        
         stripped = stripped.split("\n", 1)[1]
-        # Drop closing ```
+       
         if "```" in stripped:
             stripped = stripped.rsplit("```", 1)[0]
 
-    # 3. Let PydanticOutputParser handle the clean JSON string
     structured_response = parser.parse(stripped)
     print(structured_response)
 
