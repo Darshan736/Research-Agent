@@ -2,7 +2,7 @@ from datetime import datetime
 
 from langchain_community.tools import WikipediaQueryRun, DuckDuckGoSearchRun
 from langchain_community.utilities import WikipediaAPIWrapper
-from langchain_core.tools import Tool  # ✅ correct for LangChain 1.x
+from langchain_core.tools import Tool  
 
 
 def save_to_txt(data: str, filename: str = "research_output.txt"):
